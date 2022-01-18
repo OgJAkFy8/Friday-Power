@@ -1,0 +1,74 @@
+#Not really putting all together, but here are some things that you can do:
+for($LastOctet = 0;$LastOctet -lt 10;$LastOctet++)
+{
+  $ip = "192.168.0.$LastOctet"
+  Write-Host -Object "Ping: $ip -- Responds:  $(Test-Connection -ComputerName $ip -Count 1 -Quiet)"
+}
+
+#Or make it more reusable
+function Ping-IpRange
+{
+  param(
+    [Parameter(Mandatory,Position = 0)]
+    $First3Octets,
+    [Parameter(Mandatory,Position = 1)]
+    $FirstAddress,
+    [Parameter(Mandatory,Position = 2)]
+    $LastAddress
+  )
+  for($LastOctet = $FirstAddress;$LastOctet -lt $LastAddress;$LastOctet++)
+  {
+    $ip = "$First3Octets.$LastOctet"
+    Write-Host -Object "Ping: $ip -- Responds:  $(Test-Connection -ComputerName $ip -Count 1 -Quiet)"
+  }
+}
+Ping-IpRange -First3Octets 192.168.0 -FirstAddress 0 -LastAddress 10
+
+#Fix a list of text 
+$computerNames = 'WCSTRAA01
+  ___WCSTRAA02
+  WCSTRAA03
+  ___WCSTRAA04
+  WCSTRAA05
+  ___WCSTRAA06
+  WCSTRAA07
+  ___WCSTRAA08
+  000WCSTRAA09
+  ___0000NEDIACA01
+  000NEDIACA02
+  NEDIACA03
+  000NEDIACA04
+  NEDIACA05
+  NEDIACA06
+  NEDIACA07
+  NEDIACA08
+NEDIACA09'.Replace("`n",',')
+$ComputerList = $computerNames.Split(',').TrimStart('_','0',' ').Replace('CA','-').Replace('AA','-')
+
+#Send it to the clipboard
+$ComputerList | clip.exe
+
+#Make reusable
+function Clean-List
+{
+  param(
+    [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+    [String[]]$List
+  )
+  $CommaString = $List.Replace("`n",',')
+  $CleanArray = $CommaString.Split(',').Trim('_',',','.','\','/','-','@',' ').TrimStart('0')
+  Return $CleanArray
+}
+
+Clean-List -List $computerNames
+
+
+#Convert it to a hashtable with FQDN's and use it to Ping those names (uses write-host for the example)
+$FQDNlist = @{} #Hashtable
+$ComputerList | ForEach-Object -Process {
+  $FQDNlist.$_ = $_.ToLower()+'.domain.com'
+}
+foreach($key in $FQDNlist.Keys)
+{
+  Write-Host -Object "Ping: $($FQDNlist.$key)" -ForegroundColor Yellow
+}
