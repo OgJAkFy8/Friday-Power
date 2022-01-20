@@ -26,7 +26,7 @@ $ComputerList = $computerNames.Split(',').TrimStart('_','0',' ').Replace('CA','-
 function Optimize-List
 {
   param(
-    [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+    [Parameter(Mandatory,HelpMessage='As an Array', ValueFromPipeline, ValueFromPipelineByPropertyName)]
     [String[]]$List
   )
   $CommaString = $List.Replace("`n",',')
