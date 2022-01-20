@@ -1,27 +1,52 @@
-﻿#Not really putting all together, but here are some things that you can do:
-for($LastOctet = 0;$LastOctet -lt 10;$LastOctet++)
-{
-  $ip = "192.168.0.$LastOctet"
-  Write-Host -Object "Ping: $ip -- Responds:  $(Test-Connection -ComputerName $ip -Count 1 -Quiet)"
-}
-
-#Or make it more reusable
+﻿# This function is part of the tool box we are making.
 function Ping-IpRange
 {
+  <#
+    .SYNOPSIS
+    Tests a range of Ip addresses.
+
+    .DESCRIPTION
+    A simple function to test a range of Ip addresses and returns the results to the screen.
+
+    .PARAMETER First3Octets
+    First three octets of Ip range.
+
+    .PARAMETER FirstAddress
+    First address to test.
+
+    .PARAMETER LastAddress
+    Last address to test.
+
+    .EXAMPLE
+    Ping-IpRange -First3Octets 192.168.0 -FirstAddress 0 -LastAddress 10
+    
+    Pings from 1921.68.0.0 to 192.168.0.10
+
+    Ping: 192.168.0.0 -- Responds:  False
+    Ping: 192.168.0.1 -- Responds:  True
+    Ping: 192.168.0.2 -- Responds:  False
+    Ping: 192.168.0.3 -- Responds:  True
+    Ping: 192.168.0.4 -- Responds:  False
+
+    .OUTPUTS
+    Output to console
+  #>
+
+
   param(
-    [Parameter(Mandatory,Position = 0)]
-    $First3Octets,
-    [Parameter(Mandatory,Position = 1)]
-    $FirstAddress,
-    [Parameter(Mandatory,Position = 2)]
-    $LastAddress
+    [Parameter(Mandatory,HelpMessage='First 3 octets: 192.168.11',Position = 0)]
+    [String]$First3Octets,
+    [Parameter(Mandatory,HelpMessage='Address to start from. 1-254',Position = 1)]
+    [int]$FirstAddress,
+    [Parameter(Mandatory,HelpMessage='Address to stop. 1-254',Position = 2)]
+    [int]$LastAddress
   )
   for($LastOctet = $FirstAddress;$LastOctet -lt $LastAddress;$LastOctet++)
   {
     $ip = "$First3Octets.$LastOctet"
-    Write-Host -Object "Ping: $ip -- Responds:  $(Test-Connection -ComputerName $ip -Count 1 -Quiet)"
+    Write-Host -Object ("Ping: $ip -- Responds: $(Test-Connection -ComputerName $ip -Count 1 -Quiet)")
   }
 }
 
-Ping-IpRange -First3Octets 192.168.0 -FirstAddress 0 -LastAddress 10
+
 
