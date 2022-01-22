@@ -4,9 +4,6 @@
       .SYNOPSIS
       Removes the unwanted characters from a list.
 
-      .DESCRIPTION
-      Add a more complete description of what the function does.
-
       .PARAMETER List
       The list of data to be cleaned up
 
@@ -32,7 +29,7 @@
       000NEDIACA02
       NEDIACA03
       000NEDIACA04
-      NEDIACA09'.Replace("`n",',')
+      NEDIACA09'
 
       .OUTPUTS
       Optimized list as an array
@@ -43,8 +40,11 @@
     [Parameter(Mandatory = $true,HelpMessage = 'List', ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
     [String[]]$List
   )
+  $trimmings = ('_', ',', '.', '\', '/', '-', '@', ' ')
   $CommaString = $List.Replace("`n",',')
-  $CleanArray = $CommaString.Split(',').Trim('_',',','.','\','/','-','@',' ').TrimStart('0')
+
+  $CleanArray = $CommaString.Split(',').Trim($trimmings).TrimStart('0')
   Return $CleanArray
+}
 }
 
