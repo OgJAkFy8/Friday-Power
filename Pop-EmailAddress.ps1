@@ -22,7 +22,7 @@ function Pop-EmailAddress
       <j@mail>;testfile<k@mail>
 
       .LINK
-      https://github.com/OgJAkFy8/Friday-Power/blob/main/Pop-EmailAddresses.ps1
+      https://github.com/OgJAkFy8/Friday-Power/blob/main/Pop-EmailAddress.ps1
 
       .INPUTS
       String
