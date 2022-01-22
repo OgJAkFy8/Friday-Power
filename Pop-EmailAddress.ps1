@@ -31,8 +31,6 @@ function Pop-EmailAddress
       Array
   #>
 
-
-
   [CmdletBinding(SupportsShouldProcess)]
   [Alias('Extract-Emails')]
   param(
