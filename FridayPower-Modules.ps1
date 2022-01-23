@@ -44,11 +44,11 @@ Get-module -ListAvailable
  1. Create a folder where you want to house your scripts.  #>
  md $env:userprofile\Documents\MyScripts
  
- #2. Open a new tab in ISE and save it as $env:userprofile\Documents\MyScripts\ISEO.Tools.psm1  (Note the extension "psm1" not "ps1"
+ #2. Open a new tab in ISE and save it as $env:userprofile\Documents\MyScripts\OMCS.Tools.psm1  (Note the extension "psm1" not "ps1"
  #3. In that file, type the following and save it:
  
     Clear-Host
-    Write-Host "Loading module - ISEO.Tools " -NoNewline
+    Write-Host "Loading module - OMCS.Tools " -NoNewline
     for($i=0;$i -lt 5;$i++){Sleep 1; Write-Host '. ' -NoNewline -ForegroundColor Green}
 
 # Congratulations, you have just created your very own module
@@ -62,13 +62,13 @@ cd $env:userprofile\Documents\MyScripts
 Get-Module
 
 # Now load your module
-Import-Module .\ISEO.Tools.psm1
+Import-Module .\OMCS.Tools.psm1
 
 # Verify it loaded
-Get-Module ISEO.Tools #Don't worry about the Version or ExportedCommands right now.
+Get-Module OMCS.Tools #Don't worry about the Version or ExportedCommands right now.
 
 # Now unload your module
-Remove-Module ISEO.Tools
+Remove-Module OMCS.Tools
 
 # And check again
 Get-Module 
@@ -81,7 +81,7 @@ Remove-Item -Path Function:\Ping-IpRange
 
 
 # That is a good start.  Now let's start adding some commands to make it useful
-# Open or Edit ISEO.Tools.psm1 copy and paste the following function into it and save it
+# Open or Edit OMCS.Tools.psm1 copy and paste the following function into it and save it
 
 function Ping-IpRange
 {
@@ -105,10 +105,10 @@ Export-ModuleMember Ping-IpRange
 
 
 # Import your module again
-Import-Module .\ISEO.Tools.psm1 -Force # You don't need to use "-force” because it isn't loaded.  But using force allows you to "overwrite" if it was loaded. 
+Import-Module .\OMCS.Tools.psm1 -Force # You don't need to use "-force” because it isn't loaded.  But using force allows you to "overwrite" if it was loaded. 
 
 # Check to see if your module loaded, then check to see if your function loaded
-Get-Module ISEO.Tools 
+Get-Module OMCS.Tools 
 Get-Item -Path Function:\Ping-IpRange  # Note the source
 
 # Leaving PowerShell ISE open 
@@ -117,7 +117,7 @@ Get-Item -Path Function:\Ping-IpRange  # Note the source
 Get-Module
 
 # You should not see your module.  
-# That's okay, you can always reload by navigating to the Script folder and import it: Import-Module .\ISEO.Tools.psm1
+# That's okay, you can always reload by navigating to the Script folder and import it: Import-Module .\OMCS.Tools.psm1
 
 
 
@@ -131,10 +131,10 @@ Get-Module
 
 # This is a one liner that will add the line to your profile.
 # In your PowerShell console paste or type the following:
-Add-Content -Value "Import-Module $((Get-Item .\ISEO.Tools.psm1).FullName)" -Path $profile
+Add-Content -Value "Import-Module $((Get-Item .\OMCS.Tools.psm1).FullName)" -Path $profile
 
 <# Now close and open PowerShell again.  This time when you open it, you should see your module loading:
 
-Loading module - ISEO.Tools .  .  .  .
+Loading module - OMCS.Tools .  .  .  .
 
 #>
