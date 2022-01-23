@@ -1,4 +1,5 @@
-﻿function Optimize-List
+﻿#requires -Version 1.0
+function Optimize-List
 {
   <#
       .SYNOPSIS
@@ -46,5 +47,5 @@
   $CleanArray = $CommaString.Split(',').Trim($trimmings).TrimStart('0')
   Return $CleanArray
 }
-}
+
 
