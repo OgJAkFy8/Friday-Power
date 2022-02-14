@@ -1,6 +1,7 @@
 ﻿Clear-Host
 Write-Host 'Loading my very own module ' -NoNewline
 for($i=0;$i -lt 5;$i++){Start-Sleep -Seconds 1; Write-Host '. ' -NoNewline -ForegroundColor Green}
+Write-Host ''
 
 function Ping-IpRange
 {
