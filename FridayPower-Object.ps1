@@ -1,8 +1,10 @@
 ﻿<#
-Most of us know 'DIR' or 'ls' to get a list of files and folders at the command line.  
-You can still use that in PowerShell, but it is an alias for Get-ChildItem.
+This is about how to use of the OOL (Object-oriented language) PowerShell.  I am going to use the Get-ChildItem as an example.
 
-And Get-ChildItem is so much more powerful than the CLI commands that we have come to know and love.
+Most of us know 'DIR' or 'ls' to get a list of files and folders at the command line.  
+You can still use that in PowerShell, but it is an aliases for Get-ChildItem.
+
+Get-ChildItem is so much more powerful than the CLI commands that we have come to know and love.  
 
 When you use Get-ChildItem it returns what looks like a list of file, but what it really returns is an Object of files.
 And that object can be manipulated in different ways.
@@ -10,6 +12,12 @@ And that object can be manipulated in different ways.
 #>
 
 Get-ChildItem
+
+Get-ChildItem -File | Select-Object -Property * -First 5
+
+$FileList = Get-ChildItem -File | Select-Object -Property Name, CreationTime, Length -First 5
+$FileList.Name
+$FileList[2].CreationTime
 
 
 $files = Get-ChildItem -File | Select-Object -Property * -First 3
@@ -28,9 +36,6 @@ while($i -lt $($files.Count))
   Write-Host -Object ('~'*20)
   $i++
 }
-
-Get-ChildItem -File | Select-Object -Property Name, CreationTime, Length -First 10
-
 
 
 
