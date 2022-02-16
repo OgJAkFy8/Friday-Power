@@ -1,27 +1,25 @@
 ﻿<#
-This is about how to use of the OOL (Object-oriented language) PowerShell.  I am going to use the Get-ChildItem as an example.
+    I had a tough time getting my head wrapped aroud OOP (Object-oriented Programming) after learning POP (Procedural Oriented Programming).  
 
-Most of us know 'DIR' or 'ls' to get a list of files and folders at the command line.  
-You can still use that in PowerShell, but it is an aliases for Get-ChildItem.
+    There is much more to it, but in a nut shell, OOP uses classes and objects to create models based on the real world environment.
 
-Get-ChildItem is so much more powerful than the CLI commands that we have come to know and love.  
+    I am going to use the New-Item and Get-ChildItem as an example.
 
-When you use Get-ChildItem it returns what looks like a list of file, but what it really returns is an Object of files.
-And that object can be manipulated in different ways.
+    First we are going to create a new object named "myTestFile.txt"
+
+    Then we are going to look at the different things that are available to objects
 
 #>
 
-Get-ChildItem
-
-Get-ChildItem -File | Select-Object -Property * -First 5
-
-$FileList = Get-ChildItem -File | Select-Object -Property Name, CreationTime, Length -First 5
-$FileList.Name
-$FileList[2].CreationTime
+# The New-Item creates an object by the name of myTestFile.txt.  
+# Now we that have our object, let's see what can be done.
+New-Item -Path .\myTestFile.txt -ItemType File
 
 
-$files = Get-ChildItem -File | Select-Object -Property * -First 3
-$i = 0
+Get-ChildItem -Path .\myTestFile.txt | Get-Member 
+
+
+
 
 while($i -lt $($files.Count))
 {
