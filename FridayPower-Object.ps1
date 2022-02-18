@@ -5,7 +5,7 @@
 
     I am going to use the New-Item and Get-ChildItem as an example.
 
-    First we are going to create a new object named "myTestFile.txt"
+    First we are going to create a new file or "object" named "myTestFile.txt"
 
     Then we are going to look at the different things that are available to objects
 
@@ -14,28 +14,33 @@
 # The New-Item creates an object by the name of myTestFile.txt.  
 # Now we that have our object, let's see what can be done.
 New-Item -Path .\myTestFile.txt -ItemType File
-
+Get-ChildItem -Path .\myTestFile.txt | Get-Member | Out-File .\myTestFile.txt
 
 Get-ChildItem -Path .\myTestFile.txt | Get-Member 
 
 
 
+$file = Get-ChildItem -Path .\myTestFile.txt
 
-while($i -lt $($files.Count))
-{
-  Write-Host -Object ('File {0}' -f $($i+1))
-  Write-Host -Object ('{0,14} {1,-20}' -f 'Name :', $files[$i].Name )
-  Write-Host -Object ('{0,14} {1,-20}' -f 'BaseName :', $files[$i].BaseName )
-  Write-Host -Object ('{0,14} {1,-20}' -f 'Extension :', $files[$i].Extension )
-  Write-Host -Object ('{0,14} {1,-20}' -f 'FullName :', $files[$i].FullName )
-  Write-Host -Object ('{0,14} {1,-20}' -f 'CreationTime :', $files[$i].CreationTime )
-  Write-Host -Object ('{0,14} {1,-20}' -f 'Length :', $files[$i].Length )
+# Properties are things that describe the object
+Write-Host -Object 'This is a list of some of the Properties of the file'
+Write-Host -Object ('{0,15} {1,-20}' -f 'Name :', $file.Name )
+Write-Host -Object ('{0,15} {1,-20}' -f 'BaseName :', $file.BaseName )
+Write-Host -Object ('{0,15} {1,-20}' -f 'Extension :', $file.Extension )
+Write-Host -Object ('{0,15} {1,-20}' -f 'FullName :', $file.FullName )
+Write-Host -Object ('{0,15} {1,-20}' -f 'CreationTime :', $file.CreationTime )
+Write-Host -Object ('{0,15} {1,-20}' -f 'Length :', $file.Length )
+Write-Host -Object ('{0,15} {1,-20}' -f 'Exists :', $file.Exists )
+Write-Host -Object ('{0,15} {1,-20}' -f 'DirectoryName :', $file.DirectoryName )
+
   
-  Write-Host -Object ('~'*20)
-  $i++
-}
+Write-Host -Object ('~'*20)
+
+
+Write-Host -Object 'Below are the things we can do to the file or the "Methods"'
 
 
 
+$file.GetAccessControl().Owner
 
-
+$file.CreationTime.DayOfWeek
