@@ -1,5 +1,5 @@
 ﻿<#
-    I had a tough time getting my head wrapped aroud OOP (Object-oriented Programming) after learning POP (Procedural Oriented Programming).  
+    I had a tough time getting my head wrapped around OOP (Object-oriented Programming) after learning POP (Procedural Oriented Programming).  
 
     There is much more to it, but in a nut shell, OOP uses classes and objects to create models based on the real world environment.
 
