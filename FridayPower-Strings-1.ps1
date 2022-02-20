@@ -13,14 +13,14 @@
 #>
 
 # End result and option #1
-'C:\folder\file.txt'
+'C:\foldername\filename.txt'
 
 # Use variables
-$folder = 'folder'
-$file = 'file.txt'
+$folder = 'foldername'
+$file = 'filename.txt'
 
 # Option #2
-'C:\'+$folder+'\'+'file'+'.'+'txt'
+'C:\'+$folder+'\'+'filename'+'.'+'txt'
 
 # Option #3
 "$env:HOMEDRIVE\$folder\$file"
@@ -29,5 +29,7 @@ $file = 'file.txt'
 '{1}\{0}\{2}' -f $folder, 'C:', $file
 
 
-
+# Sometime you need to might need to pull a path apart
+'C:\foldername\filename.txt' | Split-Path        # Get the path
+'C:\foldername\filename.txt' | Split-Path -leaf  # Get the filename from full path
 
