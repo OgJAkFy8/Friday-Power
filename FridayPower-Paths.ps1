@@ -8,7 +8,7 @@
     Below are ways that you can build any string.
 
     The current perferred method is #4, which uses '-f' formatting.  
-    Each {x} contains a number, which don't have to be in order, but the list is always 0-X 
+    Each {x} contains a number starting with 0 to X.  They don't have to be in order. 
     Then list after the '-f' are the order starting from zero.
 #>
 
@@ -27,6 +27,8 @@ $file = 'filename.txt'
 
 # Option #4
 '{1}\{0}\{2}' -f $folder, 'C:', $file
+# The order after the '-f' matters. 
+# In the example: $folder = 0, 'C:' = 1 and $file = 2
 
 
 # Sometime you need to might need to pull a path apart
