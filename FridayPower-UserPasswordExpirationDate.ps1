@@ -1,8 +1,28 @@
 ﻿function Get-UserPasswordExpirationDate
 {
-  <#
-      .SYNOPSIS
-      User Password Expiration Date
+  <# 
+    .SYNOPSIS
+    User Password Expiration Date
+ 
+    .DESCRIPTION
+    Returns the expiration date of an AD user's password.
+
+    .PARAMETER AdUser
+    At this time a single AD username.
+
+    .EXAMPLE
+    Get-UserPasswordExpirationDate -AdUser myusername_ad
+    
+    Returns the password expiration date of myusername_ad
+
+    .NOTES
+    .LINK
+
+    .INPUTS
+    Single String.
+
+    .OUTPUTS
+    String
   #>
 
   [CmdletBinding(SupportsShouldProcess = $true,ConfirmImpact = 'Low')]
@@ -37,6 +57,3 @@
     Select-Object -Property 'Displayname', @{Name = 'ExpiryDate'; Expression = {[datetime]::FromFileTime($_.'msDS-UserPasswordExpiryTimeComputed')}}
 #>
 
-'one', 'two', 'three', 'four' | ForEach-Object -Process {
-  Get-UserPasswordExpirationDate -AdUser $_
-}
