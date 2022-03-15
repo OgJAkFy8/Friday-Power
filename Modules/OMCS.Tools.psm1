@@ -52,7 +52,7 @@ function Ping-IpRange
   }
 }
 
-function Optimize-List
+function Convert-ListToArray
 {
   <#
       .SYNOPSIS
@@ -89,7 +89,6 @@ function Optimize-List
       Optimized list as an array
   #>
 
-
   param(
     [Parameter(Mandatory = $true,HelpMessage = 'List', ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
     [String[]]$List
@@ -101,7 +100,7 @@ function Optimize-List
   Return $CleanArray
 }
 
-function Pop-EmailAddress
+function Format-SendToEmailList
 {
   <#
       .SYNOPSIS
@@ -155,8 +154,7 @@ function Pop-EmailAddress
   Return $results
 }
 
-
-function Get-Day 
+function Get-DayFromDate 
 {
   <#
      .SYNOPSIS
@@ -188,7 +186,7 @@ function Get-Day
   )
 
   $Sepr = '-'
-  $OutputFormat = '{0,-4} : {2,-11} : {1}'
+  $OutputFormat = '{0,-4} | {2,-11} | {1}'
   
   [Int]$Year = Get-Date -Date $Date -Format yyyy
   $Day = Get-Date -Date $Date -Format dd
@@ -208,7 +206,59 @@ function Get-Day
   }
 }
 
+function Get-UserPasswordExpirationDate
+{
+  <# 
+    .SYNOPSIS
+    User Password Expiration Date
+ 
+    .DESCRIPTION
+    Returns the expiration date of an AD user's password.
 
+    .PARAMETER AdUser
+    At this time a single AD username.
+
+    .EXAMPLE
+    Get-UserPasswordExpirationDate -AdUser myusername_ad
+    
+    Returns the password expiration date of myusername_ad
+
+    .NOTES
+    .LINK
+
+    .INPUTS
+    Single String.
+
+    .OUTPUTS
+    String
+  #>
+
+  [CmdletBinding(SupportsShouldProcess = $true,ConfirmImpact = 'Low')]
+
+  param
+  (
+    [Parameter(Mandatory = $true,HelpMessage = 'Must be an AD username', ValueFromPipeline = $true,
+    ValueFromPipelineByPropertyName = $true,Position = 0)]
+    [String]$AdUser
+  )
+
+  $userInfo = Get-ADUser $AdUser -Properties *
+  if($($userInfo.PasswordNeverExpires) -eq $false)
+  {
+    $userInfo |
+    Select-Object -Property DisplayName, msDS-UserPasswordExpiryTimeComputed |
+    Select-Object -Property 'Displayname', @{
+      Name       = 'ExpiryDate'
+      Expression = {
+        [datetime]::FromFileTime($_.'msDS-UserPasswordExpiryTimeComputed')
+      }
+    }
+  }
+  Else
+  {
+    $userInfo | Select-Object -Property DisplayName, PasswordNeverExpires
+  }
+}
 
 
 
@@ -226,5 +276,5 @@ function Get-Day
 
 
 # At the very bottom of the module script type the following and save it.  This should always be the last line in your module.
-Export-ModuleMember -Function Ping-IpRange, Optimize-List, Pop-EmailAddress, Get-Day
+Export-ModuleMember -Function Ping-IpRange, Convert-ListToArray, Format-SendToEmailList, Get-DayFromDate-Day, Get-UserPasswordExpirationDate
 
