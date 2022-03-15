@@ -18,8 +18,8 @@
 
     Here is the template
     $DnsHashTable = @{
-      buffalo = '192.168.0.59'
-      pbworks = '208.96.18.237'
+    buffalo = '192.168.0.59'
+    pbworks = '208.96.18.237'
     }
 #>
 
