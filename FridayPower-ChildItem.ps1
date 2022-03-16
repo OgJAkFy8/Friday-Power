@@ -19,7 +19,10 @@ Get-ChildItem
 # Now get all of the properties of the first two items
 Get-ChildItem -File | Select-Object -Property * -First 2
 
-# Refine the list of properties and store in an array variable.  
+# Refine the list of properties. 
+Get-ChildItem -File | Select-Object -Property Name, CreationTime, BaseName, Extension -First 5 
+
+# Store that refined list in an array variable.  
 # By doing so we can work with each item.
 # Use the variable to list only file names without extensions
 # Show the creation time of the third object. (0,1,2)
