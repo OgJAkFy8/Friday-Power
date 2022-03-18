@@ -8,3 +8,8 @@ Get-CmsMessage -Path .\Password1
 Unprotect-CmsMessage -Path .\Password1
 
 
+# save PSCredential in the file
+$credential = Get-Credential
+$credential | Export-CliXml -Path ".\myCred_${env:USERNAME}_${env:COMPUTERNAME}.xml"
+
+$credential = Import-CliXml -Path ".\myCred_${env:USERNAME}_${env:COMPUTERNAME}.xml"
