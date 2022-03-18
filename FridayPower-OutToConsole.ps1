@@ -28,6 +28,9 @@ Write-Host -Object $env:COMPUTERNAME -ForegroundColor DarkBlue -BackgroundColor 
 Write-Host -Object ('My', 'Homepath', 'is:', $env:HOMEPATH) -Separator ' ' -ForegroundColor Cyan
 
 
+# Create a file to work with
+Get-Alias | Out-File -FilePath .\PS-AliasList.txt -Force     # Force overwrites an existing file, even if read-only.
+
 # Write-Output 
 Write-Output (Get-Content -Path .\PS-AliasList.txt)
 Write-Output -InputObject (Get-Content -Path .\PS-AliasList.txt) | ForEach-Object -Process {
