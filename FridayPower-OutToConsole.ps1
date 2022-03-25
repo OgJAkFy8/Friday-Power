@@ -1,10 +1,11 @@
 ﻿<#
     Outputs to the console
     
-    When creating scripts there are interactive and non-Interactive.  
-    When starting out we create scripts that we can interact with and getting the status of a scripts process is
-    important.  As we do more, we will stop showing so much to the screen and start capturing the data to a file
-    and errors to the screen.  Then we will send everything to a file/log.
+    When creating scripts there are interactive and non-Interactive types.  It is a sort of three step growth process.    
+    When starting out most people create scripts that can be interacted with so they can see the process or add an input.
+    Then as we do more, we will stop showing so much to the screen and start capturing the data to files
+    and errors to the screen.  
+    Finally we will send almost everything to some sort of output file or log.
     
     Here are a number of different examples of outputs you can use to interact with. 
     Keeping in mind that these cmdlets can do more complex tasks or be more complex to use.
