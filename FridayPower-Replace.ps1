@@ -22,10 +22,10 @@ Get-Content C:\temp\ReplaceFile.txt # This shows what is in it currently
 # To make changes to a file
 (Get-Content c:\temp\ReplaceFile.txt -Raw) -Replace 'Line', 'This is sentence' | Set-Content c:\temp\ReplaceFile.txt
 
+# View the new file
+Get-Content c:\temp\NewReplaceFile.txt # This shows the changes
+
 # To make changes to a file and create a new one.
 $Oldfile = (Get-Content c:\temp\ReplaceFile.txt -Raw) -Replace 'Line', 'This is sentence' 
 $Oldfile | Set-Content c:\temp\NewReplaceFile.txt
-
-# View the new file
-Get-Content c:\temp\NewReplaceFile.txt # This shows the changes
 
