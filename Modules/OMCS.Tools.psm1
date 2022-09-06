@@ -1,7 +1,19 @@
 ﻿Clear-Host
-Write-Host 'Loading my very own module ' -NoNewline
-for($i=0;$i -lt 5;$i++){Start-Sleep -Seconds 1; Write-Host '. ' -NoNewline -ForegroundColor Green}
-Write-Host ''
+Write-Host -Object @'
+Loading module - OMCS.Tools 
+ModuleVersion = Friday Power
+Ping-IpRange
+Convert-ListToArray
+Format-SendToEmailList
+Get-DayFromDate
+Get-UserPasswordExpirationDate
+
+'@ -NoNewline
+for($i = 0;$i -lt 25;$i++)
+{
+  Start-Sleep -Milliseconds 100
+  Write-Host -Object '.  ' -NoNewline -ForegroundColor ('Green','Red','Cyan','Yellow' | Get-Random)
+}
 
 function Ping-IpRange
 {
@@ -264,17 +276,7 @@ function Get-UserPasswordExpirationDate
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # At the very bottom of the module script type the following and save it.  This should always be the last line in your module.
 Export-ModuleMember -Function Ping-IpRange, Convert-ListToArray, Format-SendToEmailList, Get-DayFromDate-Day, Get-UserPasswordExpirationDate
 
+New-Alias -Name 'pr' -Value Ping-IpRange -Description 'Pings Range of Ip Addresses'
