@@ -1,5 +1,5 @@
 ﻿#requires -Version 3.0
-function Get-Friday13th 
+function Get-Friday13th
 {
   <#
       .SYNOPSIS
@@ -21,7 +21,7 @@ function Get-Friday13th
       .NOTES
       None at this time
   #>
-  [CmdletBinding(PositionalBinding = $false,ConfirmImpact = 'Medium')]
+  [CmdletBinding(PositionalBinding = $false)]
   param
   (
     [Parameter(Mandatory,HelpMessage = 'Enter year. Ex: 1984')]
