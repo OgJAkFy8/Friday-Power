@@ -10,7 +10,7 @@
       This relys on a local cert that could be lost if the computer is reimaged or your profile is deleted.
 
       .PARAMETER InputFile
-      File to be encrypted.  Suggest keeping is simple and use a text (.txt) file.
+      File to be encrypted.  Suggest keeping it simple and use a text (.txt) file.
 
       .EXAMPLE
       Protect-File -InputFile Value
@@ -20,7 +20,7 @@
       Currently None
   #>
 
-  [CmdletBinding(SupportsShouldProcess,ConfirmImpact = 'Low')]
+  [CmdletBinding(SupportsShouldProcess,ConfirmImpact = 'High')]
   param(
     [Parameter(Mandatory,HelpMessage = 'File to encrypt')]
     [String]$InputFile
@@ -75,7 +75,7 @@ function Unprotect-File
       Currently none
   #>
 
-  [CmdletBinding(SupportsShouldProcess,ConfirmImpact = 'Low')]
+  [CmdletBinding(SupportsShouldProcess,ConfirmImpact = 'High')]
   param(
     [Parameter(Mandatory,HelpMessage = 'File needs to have CQR extension')]
     [ValidateScript({
@@ -96,7 +96,7 @@ function Unprotect-File
 
   if($Replace)
   {
-    $ClearTextFile = ($InputFile).Replace('cqr','.txt')
+    $ClearTextFile = ($InputFile).Replace('.cqr','.txt')
     Rename-Item -Path $InputFile -NewName $ClearTextFile
     $ClearText | Out-File -FilePath $ClearTextFile -Force
   }
@@ -110,11 +110,15 @@ function New-TestFiles
 {
   <#
       .SYNOPSIS
-      Creates 5 test files named PassTest-0.txt to PassTest-4.txt.
+      Creates a series of 1 to 25 (default 5) test files named TestTextFilet-0.txt to TestTextFile-4.txt.
 
       .EXAMPLE
       New-TestFiles
-      In the current directory it creates a series of 5 test files
+      In the current directory it creates 5 test files
+
+      .EXAMPLE
+      New-TestFiles -Amount 25
+      In the current directory it creates 25 test files
 
       .INPUTS
       None
@@ -122,20 +126,26 @@ function New-TestFiles
       .OUTPUTS
       Name          
       ----          
-      PassTest-0.txt
-      PassTest-1.txt
-      PassTest-2.txt
-      PassTest-3.txt
-      PassTest-4.txt
+      TestTextFile-0.txt
+      TestTextFile-1.txt
+      TestTextFile-2.txt
+      TestTextFile-3.txt
+      TestTextFile-4.txt
   #>
 
+  param(
+    [Parameter(HelpMessage = 'Total amount of test files to create 1 - 25')]
+    [ValidateCount(1,25)]
+    $Amount = 5
+    )
+
   $srv = Get-Service | Select-Object -First 10
-  for($i = 0;$i -lt 5;$i++)
+  for($i = 0;$i -lt $Amount;$i++)
   {
     $srv |
-    Out-File  -FilePath ('.\PassTest-{0}.txt' -f $i)
+    Out-File  -FilePath ('.\TestTextFile-{0}.txt' -f $i)
   }
-  #('.\PassTest-{0}.cqr' -f (Get-Date -UFormat %j%M%S))
+  #('.\TestTextFile-{0}.cqr' -f (Get-Date -UFormat %j%M%S))
 }
 
 Export-ModuleMember -Function Protect-File, Unprotect-File, New-TestFiles
