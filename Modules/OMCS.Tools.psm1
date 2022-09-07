@@ -7,6 +7,7 @@ Convert-ListToArray
 Format-SendToEmailList
 Get-DayFromDate
 Get-UserPasswordExpirationDate
+Show-Subnet
 
 '@ -NoNewline
 for($i = 0;$i -lt 25;$i++)
