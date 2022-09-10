@@ -55,9 +55,9 @@ function Protect-TextFile
       $InputFile = (Get-ItemProperty $InputFile).Name
 
       $ext = (Get-ItemProperty -Path $InputFile).Extension
-      if($ext -ne 'txt')
+      if($ext -ne '.txt')
       {
-        Write-Warning -Message ('{0} in not a "txt" file and may not be able to be unencrypted' -f $InputFile)
+        Write-Warning -Message ('{0} in not a ".txt" file and may not be able to be unencrypted' -f $InputFile)
         $ans = Read-Host -Prompt 'Type "YES" to continue'
         if($ans -ne 'yes')
         {
@@ -65,12 +65,14 @@ function Protect-TextFile
           Break
         }
       }
-      Write-Host -Object ('Encrypting {0}' -f $InputFile) -ForegroundColor Red
+      Write-Verbose ('Encrypting: {0}' -f $InputFile)
       $CqrFile = ($InputFile).Replace($ext,$SecureExt)
       Rename-Item -Path (Get-ItemProperty $InputFile).Name -NewName $CqrFile -Force
 
       $InputFile = (Get-ItemProperty -Path $CqrFile).FullName
       Get-Content -Path $InputFile | Protect-CmsMessage -To CN=MyDocumentEncryption -OutFile $InputFile
+      Write-Verbose ('Completed: {0}' -f $InputFile)
+      
     }
   }
   End{}
