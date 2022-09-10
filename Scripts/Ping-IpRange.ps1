@@ -37,11 +37,16 @@ function Ping-IpRange
     [Parameter(Mandatory,HelpMessage='First 3 octets: 192.168.11',Position = 0)]
     [String]$First3Octets,
     [Parameter(Mandatory,HelpMessage='Address to start from. 1-254',Position = 1)]
-    [int]$FirstAddress,
+    [String]$FirstAddress,
     [Parameter(Mandatory,HelpMessage='Address to stop. 1-254',Position = 2)]
-    [int]$LastAddress
+    [String]$LastAddress
   )
-  for($LastOctet = $FirstAddress;$LastOctet -lt $LastAddress;$LastOctet++)
+
+  $First3Octets = $First3Octets.Trim('. ')
+  [int]$FirstAddress = $FirstAddress.Trim('. ')
+  [int]$LastAddress  = $LastAddress.Trim('. ')
+
+  for($LastOctet = $FirstAddress;$LastOctet -le $LastAddress;$LastOctet++)
   {
     $ip = "$First3Octets.$LastOctet"
     Write-Host -Object ("Ping: $ip -- Responds: $(Test-Connection -ComputerName $ip -Count 1 -Quiet)")
