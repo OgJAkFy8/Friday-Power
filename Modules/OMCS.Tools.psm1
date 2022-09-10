@@ -1,20 +1,25 @@
-﻿Clear-Host
-Write-Host -Object @'
-Loading module - OMCS.Tools 
-ModuleVersion = Friday Power
-Ping-IpRange
-Convert-ListToArray
-Format-SendToEmailList
-Get-DayFromDate
-Get-UserPasswordExpirationDate
-Show-Subnet
-
-'@ -NoNewline
-for($i = 0;$i -lt 25;$i++)
+﻿function Start-Dots
 {
-  Start-Sleep -Milliseconds 100
-  Write-Host -Object '.  ' -NoNewline -ForegroundColor ('Green','Red','Cyan','Yellow' | Get-Random)
+  <#
+      .SYNOPSIS
+      Shows start dots
+  #>
+  if (-not (Test-Path -Path variable:global:psISE))
+  {
+    Clear-Host
+    $i = 0 
+    do 
+    { 
+      Start-Sleep -Milliseconds 100
+      Write-Host -Object '.  ' -NoNewline -ForegroundColor ('Green', 'Red', 'Cyan', 'Yellow' | Get-Random)
+      $i++
+    }
+    until (($i -gt 20) -or [System.Console]::KeyAvailable)  
+    Write-Host -Object "`n"
+  }
 }
+
+Start-Dots
 
 function Ping-IpRange
 {
@@ -54,14 +59,19 @@ function Ping-IpRange
     [Parameter(Mandatory,HelpMessage='First 3 octets: 192.168.11',Position = 0)]
     [String]$First3Octets,
     [Parameter(Mandatory,HelpMessage='Address to start from. 1-254',Position = 1)]
-    [int]$FirstAddress,
+    [String]$FirstAddress,
     [Parameter(Mandatory,HelpMessage='Address to stop. 1-254',Position = 2)]
-    [int]$LastAddress
+    [String]$LastAddress
   )
-  for($LastOctet = $FirstAddress;$LastOctet -lt $LastAddress;$LastOctet++)
+
+  $First3Octets = $First3Octets.Trim('. ')
+  [int]$FirstAddress = $FirstAddress.Trim('. ')
+  [int]$LastAddress  = $LastAddress.Trim('. ')
+
+  for($LastOctet = $FirstAddress;$LastOctet -le $LastAddress;$LastOctet++)
   {
-    $ip = ('{0}.{1}' -f $First3Octets, $LastOctet)
-    Write-Host -Object (('Ping: {0} -- Responds: {1}' -f $ip, (Test-Connection -ComputerName $ip -Count 1 -Quiet)))
+    $ip = "$First3Octets.$LastOctet"
+    Write-Host -Object ("Ping: $ip -- Responds: $(Test-Connection -ComputerName $ip -Count 1 -Quiet)")
   }
 }
 
@@ -562,6 +572,6 @@ function Show-Subnet
 
 
 # At the very bottom of the module script type the following and save it.  This should always be the last line in your module.
-Export-ModuleMember -Function Ping-IpRange, Convert-ListToArray, Format-SendToEmailList, Get-DayFromDate-Day, Get-UserPasswordExpirationDate, Show-Subnet
+Export-ModuleMember -Function Ping-IpRange, Convert-ListToArray, Format-SendToEmailList, Get-DayFromDate-Day, Get-UserPasswordExpirationDate, Show-Subnet  -Verbose
 
 New-Alias -Name 'pr' -Value Ping-IpRange -Description 'Pings Range of Ip Addresses'
