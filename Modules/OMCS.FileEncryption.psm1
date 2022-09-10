@@ -1,4 +1,12 @@
-﻿function Protect-File
+﻿ <#
+      .SYNOPSIS
+      Open Minded Common Sense script from Knarr Studio  
+
+      .LINK
+      https://github.com/OgJAkFy8/Friday-Power/blob/main/Modules/OMCS.FileEncryption.psm1
+  #>
+
+function Protect-TextFile
 {
   <#
       .SYNOPSIS
@@ -22,29 +30,53 @@
 
   [CmdletBinding(SupportsShouldProcess,ConfirmImpact = 'High')]
   param(
-    [Parameter(Mandatory,HelpMessage = 'File to encrypt')]
-    [String]$InputFile
+    [Parameter(Mandatory,
+        ValueFromPipeline = $true,
+        ValueFromPipelineByPropertyName = $true,
+    HelpMessage = 'File to encrypt')]
+    [Alias('InputFile')]
+    [String[]]$Name
   )
+  Begin{
+    $SecureExt = '.cqr'
+    $CertHash = Get-ChildItem -Path Cert:\CurrentUser\My\
+    $CertThumb = $CertHash.GetEnumerator().Where({
+        $_.Subject -match 'MyDocumentEncryption'
+    }).thumbprint
 
-  $SecureExt = '.cqr'
-  $ext = (Get-ItemProperty -Path $InputFile).Extension
-  $CqrFile = ($InputFile).Replace($ext,$SecureExt)
-  Rename-Item -Path $InputFile -NewName $CqrFile
-
-  $CertHash = Get-ChildItem -Path Cert:\CurrentUser\My\
-  $CertThumb = $CertHash.GetEnumerator().Where({
-      $_.Subject -match 'MyDocumentEncryption'
-  }).thumbprint
-
-  if(-Not (Test-Path -Path ('Cert:\CurrentUser\My\{0}' -f $CertThumb)))
-  {
-    New-SelfSignedCertificate -DnsName MyDocumentEncryption -FriendlyName MyDocumentEncryption -CertStoreLocation 'Cert:\CurrentUser\My' -KeyUsage KeyEncipherment, DataEncipherment, KeyAgreement -Type DocumentEncryptionCert
+    if(-Not (Test-Path -Path ('Cert:\CurrentUser\My\{0}' -f $CertThumb)))
+    {
+      New-SelfSignedCertificate -DnsName MyDocumentEncryption -FriendlyName MyDocumentEncryption -CertStoreLocation 'Cert:\CurrentUser\My' -KeyUsage KeyEncipherment, DataEncipherment, KeyAgreement -Type DocumentEncryptionCert
+    }
   }
-  $InputFile = (Get-ItemProperty -Path $CqrFile).FullName
-  Get-Content -Path $InputFile | Protect-CmsMessage -To CN=MyDocumentEncryption -OutFile $InputFile
+  Process{
+    foreach($InputFile in $Name)
+    {
+      $InputFile = (Get-ItemProperty $InputFile).Name
+
+      $ext = (Get-ItemProperty -Path $InputFile).Extension
+      if($ext -ne 'txt')
+      {
+        Write-Warning -Message ('{0} in not a "txt" file and may not be able to be unencrypted' -f $InputFile)
+        $ans = Read-Host -Prompt 'Type "YES" to continue'
+        if($ans -ne 'yes')
+        {
+          Write-Host -Object 'Exiting...' -ForegroundColor Cyan
+          Break
+        }
+      }
+      Write-Host -Object ('Encrypting {0}' -f $InputFile) -ForegroundColor Red
+      $CqrFile = ($InputFile).Replace($ext,$SecureExt)
+      Rename-Item -Path (Get-ItemProperty $InputFile).Name -NewName $CqrFile -Force
+
+      $InputFile = (Get-ItemProperty -Path $CqrFile).FullName
+      Get-Content -Path $InputFile | Protect-CmsMessage -To CN=MyDocumentEncryption -OutFile $InputFile
+    }
+  }
+  End{}
 }
 
-function Unprotect-File
+function Unprotect-TextFile
 {
   <#
       .SYNOPSIS
@@ -106,7 +138,7 @@ function Unprotect-File
   }
 }
 
-function New-TestFiles
+function New-TestTextFiles
 {
   <#
       .SYNOPSIS
@@ -134,9 +166,17 @@ function New-TestFiles
   #>
 
   param(
-    [Parameter(HelpMessage = 'Total amount of test files to create 1 - 25')]
-    [ValidateCount(1,25)]
-    $Amount = 5
+    [Parameter(HelpMessage = 'Total amount of test files to create 1 - 20')]
+    [ValidateScript({
+          If($_ -le 20)
+          {
+            $true
+          }
+          Else
+          {
+            Throw 'Amount must be between 1 - 20'
+          }
+    })][int]$Amount = 5
     )
 
   $srv = Get-Service | Select-Object -First 10
@@ -148,4 +188,4 @@ function New-TestFiles
   #('.\TestTextFile-{0}.cqr' -f (Get-Date -UFormat %j%M%S))
 }
 
-Export-ModuleMember -Function Protect-File, Unprotect-File, New-TestFiles
+Export-ModuleMember -Function Protect-TextFile, Unprotect-TextFile, New-TestTextFiles
