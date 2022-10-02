@@ -1,0 +1,83 @@
+The PowerShell _Profile.ps1_ that is.  Do you make changes to your session every time you open a PowerShell console?  Changing the directory or loading modules or aliases?
+
+If so, read on.  Using the _profile.ps1_ allows you to save those customizations.  Whether it is to add commands, aliases, functions, variables, snap-ins, modules, PowerShell drives or change to a specific directory, each and every one can be loaded at start-up.
+
+When you first install PowerShell, there are no profiles, but there is a $Profile variable. It's an object that points to the path where each profile to apply should be placed. PowerShell has a total of five profiles that it pulls from, but we are only going to focus on the _Current User, Current Host_ otherwise known as "your" profile. You can run ```$Profile | Select-Object *``` to see the profile types and the paths associated with them.
+* All Users, All Hosts - $PROFILE.AllUsersAllHosts
+* All Users, Current Host - $PROFILE.AllUsersCurrentHost
+* Current User, All Hosts - $PROFILE.CurrentUserAllHosts
+* Current User, Current Host - $PROFILE.CurrentUserCurrentHost
+
+## Check and Create
+There are probably a few ways to do this but let's start by seeing if you have a profile file created.   
+```PowerShell 
+Test-Path -Path $PROFILE 
+``` 
+
+> _Much of the time using just the **$PROFILE** works, but I have seen cases where you have to use the full path, so I started writing the full path **$PROFILE.CurrentUserCurrentHost** to reduce potential issues.  While working through this and you see **$PROFILE**, **$PROFILE.CurrentUserCurrentHost** is implied._
+
+
+If the **Test-Path** response is "False", then we can create it using Notepad.  This method will allow you to view it, edit it and create a new one all at one time.
+```PowerShell
+Notepad $PROFILE.CurrentUserCurrentHost 
+```
+
+## Writing your first customizations
+Start with something simple that most people do.  Change the directory.
+In PS (PowerShell) the CD command is an alias for ```Set-Location```, so we are going to add the following line to the Notepad document.
+```PowerShell
+Set-Location H:\
+```
+Save the file, then close and open PowerShell.  If everything went correctly the console should be pointing to your home drive (H:\).
+
+When I started this series, (besides not having a real syllabus or appreciation for the amount of time it would take), I was planning to have a group of “Tools” that you could add to your profile, so they would always be available.  Little scripts like ```Get-FsmoRoleHolders``` or ```Ping-IpRange``` are handy, but not if you have to search for them.  Loading them with your profile allows you to have them at your fingertips.
+
+When I sent this as an email, I attached the following “Tool” box module that we started in the beginning:
+[OMCS.Tools.psm1](https://github.com/OgJAkFy8/Friday-Power/blob/main/Modules/OMCS.Tools.psm1)
+Save the file as **H:\MyScripts\Profile\OMCS.Tools.psm1** 
+
+Open your Profile again with Notepad.  Add the line to the file
+```PowerShell
+ Import-Module H:\MyScripts\Profile\OMCS.Tools.psm1
+```
+
+Exit PowerShell and restart it.  See if the tools have been loaded
+```PowerShell
+Get-module | Select ExportedCommands
+```
+
+
+## Advanced methods 
+Create or add to your ```$PROFILE``` document.
+* This will append it to the bottom of the profile script, so it will be the last thing to run.
+  * ```‘Set-Location C:\Temp’ | Add-Content $Profile```
+* The following will check for the file and create it if it doesn't exist.
+```PowerShell
+if (!(Test-Path -Path $PROFILE)) {
+  New-Item -ItemType File -Path $PROFILE -Force
+}
+```
+
+## Ready Made Profile
+Here is the above full Profile Script, with testing.
+```PowerShell
+Write-Host ('PS Version: {0}' -f $PSVersionTable.GitCommitId) -Cyan
+if(Test-Path H:\){
+   # This will only attempt to load the profile if your H: drive is available
+   Set-Location H:\
+   if(Test-Path H:\MyScripts\Profile\OMCS.Tools.psm1){
+      Import-Module H:\MyScripts\Profile\OMCS.Tools.psm1
+   }
+}
+```
+
+## Starting Over 
+In the event that you need to start over, here are two options.
+* Open the file and **delete** the contents, then save it.  
+* Remove-Item $PROFILE
+
+
+## Troubleshooting 
+* Some people have reported an issue saving the notepad file.  
+  * Check your permissions
+  * Try using the ```Add-Content``` command
