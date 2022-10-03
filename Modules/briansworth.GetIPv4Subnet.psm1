@@ -243,6 +243,7 @@ function Get-CidrFromHostCount
     $PrefixLength
   }
 }
+
 Function Get-IPv4Subnet 
 {
   <#
