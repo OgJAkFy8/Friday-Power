@@ -1,3 +1,24 @@
+Function Convert-IPv4AddressToBinaryString 
+{
+  <#
+      .SYNOPSIS
+      Converts an IP v4 Address to Binary String 
+  #>
+
+  Param(
+    [IPAddress]$IPAddress = '0.0.0.0'
+  )
+  $addressBytes = $IPAddress.GetAddressBytes()
+
+  $strBuilder = New-Object -TypeName Text.StringBuilder
+  foreach($byte in $addressBytes)
+  {
+    $8bitString = [Convert]::ToString($byte,2).PadRight(8,'0')
+    $null = $strBuilder.Append($8bitString)
+  }
+  Write-Output -InputObject $strBuilder.ToString()
+}
+
 Function ConvertIPv4ToInt 
 {
   [CmdletBinding()]
@@ -31,6 +52,59 @@ Function ConvertIntToIPv4
     $bytes = [System.BitConverter]::GetBytes($Integer)
     [Array]::Reverse($bytes)
     ([IPAddress]($bytes)).ToString()
+  }
+  Catch
+  {
+    Write-Error -Exception $_.Exception `
+    -Category $_.CategoryInfo.Category
+  }
+}
+
+Function Add-IntToIPv4Address 
+{
+  <#
+      .SYNOPSIS
+      Add an integer to an IP Address and get the new IP Address.
+
+      .DESCRIPTION
+      Add an integer to an IP Address and get the new IP Address.
+
+      .PARAMETER IPv4Address
+      The IP Address to add an integer to.
+
+      .PARAMETER Integer
+      An integer to add to the IP Address. Can be a positive or negative number.
+
+      .EXAMPLE
+      Add-IntToIPv4Address -IPv4Address 10.10.0.252 -Integer 10
+
+      10.10.1.6
+
+      Description
+      -----------
+      This command will add 10 to the IP Address 10.10.0.1 and return the new IP Address.
+
+      .EXAMPLE
+      Add-IntToIPv4Address -IPv4Address 192.168.1.28 -Integer -100
+
+      192.168.0.184
+
+      Description
+      -----------
+      This command will subtract 100 from the IP Address 192.168.1.28 and return the new IP Address.
+  #>
+  Param(
+    [Parameter(Mandatory=$true)][String]$IPv4Address,
+
+    [Parameter(Mandatory=$true)][int64]$Integer
+  )
+  Try
+  {
+    $ipInt = ConvertIPv4ToInt -IPv4Address $IPv4Address `
+    -ErrorAction Stop
+    $ipInt += $Integer
+
+    ConvertIntToIPv4 -Integer $ipInt
   }
   Catch
   {
@@ -126,82 +200,6 @@ Function Convert-NetMaskToCIDR
     }
 
     ($strBuilder.ToString().TrimEnd('0')).Length
-  }
-  Catch
-  {
-    Write-Error -Exception $_.Exception `
-    -Category $_.CategoryInfo.Category
-  }
-}
-
-Function Convert-IPv4AddressToBinaryString 
-{
-  <#
-      .SYNOPSIS
-      Converts an IP v4 Address to Binary String 
-
-  #>
-
-
-  Param(
-    [IPAddress]$IPAddress = '0.0.0.0'
-  )
-  $addressBytes = $IPAddress.GetAddressBytes()
-
-  $strBuilder = New-Object -TypeName Text.StringBuilder
-  foreach($byte in $addressBytes)
-  {
-    $8bitString = [Convert]::ToString($byte,2).PadRight(8,'0')
-    $null = $strBuilder.Append($8bitString)
-  }
-  Write-Output -InputObject $strBuilder.ToString()
-}
-
-Function Add-IntToIPv4Address 
-{
-  <#
-      .SYNOPSIS
-      Add an integer to an IP Address and get the new IP Address.
-
-      .DESCRIPTION
-      Add an integer to an IP Address and get the new IP Address.
-
-      .PARAMETER IPv4Address
-      The IP Address to add an integer to.
-
-      .PARAMETER Integer
-      An integer to add to the IP Address. Can be a positive or negative number.
-
-      .EXAMPLE
-      Add-IntToIPv4Address -IPv4Address 10.10.0.252 -Integer 10
-
-      10.10.1.6
-
-      Description
-      -----------
-      This command will add 10 to the IP Address 10.10.0.1 and return the new IP Address.
-
-      .EXAMPLE
-      Add-IntToIPv4Address -IPv4Address 192.168.1.28 -Integer -100
-
-      192.168.0.184
-
-      Description
-      -----------
-      This command will subtract 100 from the IP Address 192.168.1.28 and return the new IP Address.
-  #>
-  Param(
-    [String]$IPv4Address,
-
-    [int64]$Integer
-  )
-  Try
-  {
-    $ipInt = ConvertIPv4ToInt -IPv4Address $IPv4Address `
-    -ErrorAction Stop
-    $ipInt += $Integer
-
-    ConvertIntToIPv4 -Integer $ipInt
   }
   Catch
   {
