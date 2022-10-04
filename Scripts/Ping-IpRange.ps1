@@ -53,5 +53,5 @@ function Ping-IpRange
   }
 }
 
-
+New-Alias -Name 'pr' -Value Ping-IpRange -Description 'Pings Range of Ip Addresses'
 
