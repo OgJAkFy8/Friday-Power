@@ -2,7 +2,7 @@
 The question is how to get all of the .csv files in a directory.  
 
 Most of us know 'DIR' or 'ls' to get a list of files and folders at the command line.  
-You can still use that in PowerShell, but it is an aliases for Get-ChildItem.
+You can still use those commands in PowerShell, but they are aliases for Get-ChildItem.
 
 Get-ChildItem is so much more powerful than the CMD commands that we all know and love.  
 
